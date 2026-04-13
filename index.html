@@ -22,7 +22,7 @@
       <h1>GigaPet JavaScript Edition</h1>
     </header>
 
-    <main>
+    <main class="pet-menu">
 
       <section class="pet-image-container">
          <!-- Replace pet image with your own pet image -->
@@ -30,34 +30,37 @@
       </section>
 
       <section class="dashboard">
-        <div>Name: <strong><span class="name"></span></strong></div>
+        <h2>
+          <strong><span class="name">Name</span></strong>
+        </h2>
 
-        <div>Weight: <strong><span class="weight"></span> pounds</strong></div>
+        <div>
+          Weight: <strong><span class="weight"></span> / 10</strong>
+          <div class="meter-bar"><div class="meter-fill weight-fill"></div></div>
+        </div>
 
-        <div>Happiness: <strong><span class="happiness"></span> tail wags (per min)</strong></div>
+        <div>
+          Happiness: <strong><span class="happiness"></span> / 10</strong>
+          <div class="meter-bar"><div class="meter-fill happiness-fill"></div></div>
+        </div>
 
-        <div>Style: <strong><span class="style"></span> points</strong></div>
+        <div>
+          Style: <strong><span class="style"></span> / 10</strong>
+          <div class="meter-bar"><div class="meter-fill style-fill"></div></div>
+        </div>
 
         <!-- Visual notification -->
         <div class="notification"></div>
 
         <div class="button-container">
 
-          <button class="treat-button">
-            Treat
-          </button>
+          <button class="treat-button">Treat</button>
 
-          <button class="play-button">
-            Play
-          </button>
+          <button class="play-button">Play</button>
 
-          <button class="exercise-button">
-            Exercise
-          </button>
+          <button class="exercise-button">Exercise</button>
 
-          <button class="drip-button">
-            Drip
-          </button>
+          <button class="drip-button">Drip</button>
 
         </div>
       </section>

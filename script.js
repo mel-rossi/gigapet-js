@@ -93,7 +93,7 @@ function checkLimitMessages() {
 
   // Weight Limits
   if (pet_info.weight === 0) { 
-    showNotification("I'm a little hungry...");
+    showNotification("I'm starving over here! Feeeeeeed me!");
     shownLimitMessages.weightMin = true;
   } else {
     shownLimitMessages.weightMin = false;
@@ -113,14 +113,6 @@ function checkLimitMessages() {
   } else {
     shownLimitMessages.happinessMin = false;
   }
-/*
-  if (pet_info.happiness === 10) {
-    showNotification("This is the best day ever!");
-    shownLimitMessages.happinessMax = true;
-  } else {
-    shownLimitMessages.happinessMax = false;
-  }
-*/
   
   // Style Limits
   if (pet_info.style === 0) {
@@ -140,6 +132,10 @@ function checkLimitMessages() {
 
 // Enables or Disables buttons based on current stats 
 function updateButtonStates() {
+  /*
+      .prop() is a JQuery method that allows you to get or set properties of HTML DOM elements. 
+      Here it enables or disables buttons based on the current state of pet_info.
+  */
   $('.play-button').prop('disabled', pet_info.weight === 0);
   $('.exercise-button').prop('disabled', pet_info.weight === 0 || pet_info.happiness === 0);
   $('.treat-button').prop('disabled', pet_info.weight === 10);
@@ -152,6 +148,10 @@ function updatePetInfoInHtml() {
   $('.weight').text(pet_info['weight']);
   $('.happiness').text(pet_info['happiness']);
   $('.style').text(pet_info['style']);
+
+  $('.weight-fill').css('width', pet_info.weight * 10 + '%');
+  $('.happiness-fill').css('width', pet_info.happiness * 10 + '%');
+  $('.style-fill').css('width', pet_info.style * 10 + '%');
 }
 
 // Visual notifications 
@@ -167,5 +167,5 @@ function showNotification(message) {
     .delay(2000) // Keep the notification visible for 2 seconds
     .fadeOut(500);
       
-    updateButtonStates(); // Update button states after notification is done
+  updateButtonStates(); // Update button states after notification is done
 }
