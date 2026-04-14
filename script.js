@@ -8,12 +8,11 @@ $(function() { // Makes sure that your function is called once all the DOM eleme
   $('.play-button').click(clickedPlayButton);
   $('.exercise-button').click(clickedExerciseButton);
   $('.drip-button').click(clickedDripButton);
-  
 })
 
 // Pet Info Object
 var pet_info = { 
-    name: "Hound",
+    name: "Hound The Cat",
     weight: 5,
     happiness: 5,
     style: 5
@@ -115,14 +114,15 @@ function checkLimitMessages() {
   }
   
   // Style Limits
-  if (pet_info.style === 0) {
-    showNotification("My clothes are so battered!? You can't even properly appreciate my cuteness!");
+  if (pet_info.style === 0 && pet_info.weight > 0 && pet_info.weight < 10 && pet_info.happiness > 0) { 
+    // Prevent spam and prioritize weight and happiness special messages
+    showNotification("I'm so battered, not even my mom would recognize my cute face!?!");
     shownLimitMessages.styleMin = true;
   } else {
     shownLimitMessages.styleMin = false;
   }
 
-  if (pet_info.style === 10) {
+  if (pet_info.style === 10 && pet_info.weight > 0 && pet_info.weight < 10 && pet_info.happiness > 0) {
     showNotification("It is I the drip Master! No other has more drip than me!");
     shownLimitMessages.styleMax = true;
   } else {
@@ -132,26 +132,81 @@ function checkLimitMessages() {
 
 // Enables or Disables buttons based on current stats 
 function updateButtonStates() {
+  var states = {
+    '.treat-button':    pet_info.weight === 10 || (pet_info.style === 0 && pet_info.weight !== 0),
+    '.play-button':     pet_info.weight === 0 || pet_info.style === 0,
+    '.exercise-button': pet_info.weight === 0 || pet_info.happiness === 0 || pet_info.style === 0,
+    '.drip-button':     pet_info.style === 10
+  };
+
   /*
-      .prop() is a JQuery method that allows you to get or set properties of HTML DOM elements. 
-      Here it enables or disables buttons based on the current state of pet_info.
+    .each() is a JQuery method that iterates over a set of elements, executing a function for each. 
+    Here it loops every button selector and applies disabled property and visual grey out.
   */
-  $('.play-button').prop('disabled', pet_info.weight === 0);
-  $('.exercise-button').prop('disabled', pet_info.weight === 0 || pet_info.happiness === 0);
-  $('.treat-button').prop('disabled', pet_info.weight === 10);
-  $('.drip-button').prop('disabled', pet_info.style === 10);
+  $.each(states, function(selector, isDisabled) { 
+    $(selector)
+      /*
+        .prop() is a JQuery method that allows you to get or set properties of HTML DOM elements. 
+        Here it enables or disables buttons based on the current state of pet_info.
+      */
+      .prop('disabled', isDisabled)
+      .toggleClass('disabled-btn', isDisabled);
+  });
+
+  
+}
+
+// Color based on stat bar values 
+function colorCheck(colorA, colorB, ratio) {
+  // Split the hex color into RGB components and convert to decimal
+  var rA = parseInt(colorA.slice(1, 3), 16); // 'e7'
+  var gA = parseInt(colorA.slice(3, 5), 16); // '4c'
+  var bA = parseInt(colorA.slice(5, 7), 16); // '3c'
+
+  var rB = parseInt(colorB.slice(1, 3), 16); // '2e'
+  var gB = parseInt(colorB.slice(3, 5), 16); // 'ec'
+  var bB = parseInt(colorB.slice(5, 7), 16); // '71'
+
+  // Linear interpolation (intermediate color) based on ratio between colorA and colorB
+  var r = Math.round(rA + (rB - rA) * ratio); 
+  var g = Math.round(gA + (gB - gA) * ratio);
+  var b = Math.round(bA + (bB - bA) * ratio);
+
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+// Color Fade for Stat Bar Fill
+function statColor(value, lowColor, midColor, highColor) {
+  if (value <= 5) {
+    return colorCheck(lowColor, midColor, value / 5);
+  } else {
+    return colorCheck(midColor, highColor, (value - 5) / 5);
+  }
 }
     
 // Updates your HTML with the current values in your pet_info object
 function updatePetInfoInHtml() {
+  var red   = '#e74c3c';
+  var green = '#2ecc71';
+  var blue  = '#3498db';
+
   $('.name').text(pet_info['name']);
   $('.weight').text(pet_info['weight']);
   $('.happiness').text(pet_info['happiness']);
   $('.style').text(pet_info['style']);
 
-  $('.weight-fill').css('width', pet_info.weight * 10 + '%');
-  $('.happiness-fill').css('width', pet_info.happiness * 10 + '%');
-  $('.style-fill').css('width', pet_info.style * 10 + '%');
+  $('.weight-fill').css('width', (pet_info.weight / 10 * 100) + '%');
+  $('.happiness-fill').css('width', (pet_info.happiness / 10 * 100) + '%');
+  $('.style-fill').css('width', (pet_info.style / 10 * 100) + '%');
+
+  // Weight Bar Fill : Red (0) - Green (5) - Red (10)
+  $('.weight-fill').css('background-color', statColor(pet_info.weight, red, green, red));
+
+  // Happiness Bar Fill : Red (0) - Blue (5) - Green (10)
+  $('.happiness-fill').css('background-color', statColor(pet_info.happiness, red, blue, green));
+
+  // Style Bar Fill : Red (0) - Blue (5) - Green (10)
+  $('.style-fill').css('background-color', statColor(pet_info.style, red, blue, green));
 }
 
 // Visual notifications 
@@ -164,8 +219,8 @@ function showNotification(message) {
   $note.text(message).show(); // Show the notification with the message
 
   $note 
-    .delay(2000) // Keep the notification visible for 2 seconds
+    .delay(4000) // Keep the notification visible for 2 seconds
     .fadeOut(500);
       
-  updateButtonStates(); // Update button states after notification is done
+    updateButtonStates(); // Update button states after notification is done
 }

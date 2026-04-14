@@ -1,25 +1,50 @@
+/*
+  Color Scheme 
+  Site Background:  White Smoke
+  Pet Menu: Bisque
+  Footer & Header Background: #404853
+  Font: Black || White Smoke
+*/
 
+/* Global Styles */ 
 * {
   box-sizing: border-box;
 }
-  
+
+html, body { 
+  margin: 0;
+  height: 100%;
+}
+
 body {
   font-family: helvetica, arial, sans-serif;
-  margin: 25px;
+
+  color: black;
+  background-color: Whitesmoke;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
   
 main {
   display: block;
-  height: 175px;
+  height: 100vh;
 }
   
-header {
-  border-bottom: 1px solid black;
+header, footer {
+  color: whitesmoke;
+  background-color: #404853;
+
+  text-align: center;
+  padding: 10px;
 }
-  
-h1 {
-  font-weight: bold;
-  color: #000;
+
+.site-header { 
+  margin-bottom: 10px;
+}
+
+.site-footer { 
+  margin-top: 10px;
 }
   
 .bold {
@@ -35,66 +60,106 @@ li {
   margin-bottom: 5px;
 }
   
-footer {
-  padding-top: 25px;
-  border-top: 1px solid black;
-}
-  
 footer a {
   float: left;
   margin: 5px;
 }
 
+/* Main Content */ 
 .pet-menu { 
   display: grid;
   justify-content: center;
   grid-template-columns: auto auto;
   padding: 10px;
+  margin: 20px;
+
+  background-color: bisque;
+  border-radius: 20px;
 }
-  
-.pet-image {
-  height: 250px;
-}
-  
-.dashboard div {
-  display: block;
-}
-  
+
+/* Sprite */ 
 .pet-image-container {
-  float: left;
+  position: relative;
   padding: 10px;
 }
-  
-.dashboard {
-  float: left;
-  padding: 20px;
+
+.pet-image {
+  overflow: hidden;
+  height: 250px;
 }
-  
-.button-container {
-  margin-top: 20px;
-}
-  
-.button-container button {
-  width: 100px;
-  margin-right: 10px;
+
+/* Conditional Message */
+.bubble {
+  display: none;
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.75);
+  border: 2px solid #ccc;
+  border-radius: 16px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: bold;
   text-align: center;
-  display: inline-block;
-  float: left;
-  font-size: 15px;
-  background-color: #1e2835;
-  border-color: #404853;
-  cursor: pointer;
-  background-image: linear-gradient(to bottom,rgba(246,246,246,.1)0%,rgba(30,40,53,0)66%);
-  color: #fafafa;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+  width: 240px;
+}
+
+/* Dashboard (Name, Stats, Action Buttons) */ 
+.dashboard {
+  padding: 20px;
+  text-align: center;
+}
+
+.dashboard div {
+  display: flex;
+}
+
+/* Name */
+.name-box { 
+  font-size: 40px;
+  font-style: oblique;
+  text-shadow: 1px 2px 0px lightslategray;
+
+  margin: 10px;
+}
+
+/* Stats */
+.stat-box { 
+  display: grid;
+  grid-template-columns: auto auto;
+  padding: 5px;
+}
+
+.stat-label { 
+  font-size: 15px; 
+  margin-bottom: 4px;
+  width: 150px;
+
+  white-space: nowrap;
+  font-weight: bold;
 }
 
 .meter-bar { 
-  width: 200px;
+  position: relative;
+  width: 150px;
   height: 20px;
   background-color: #ccc;
   border-radius: 10px;
   overflow: hidden;
-  padding: 1px;
+  border: 1px solid #999;
+}
+
+.meter-value { 
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .meter-fill { 
@@ -106,12 +171,30 @@ footer a {
   background-color: blue; /* Default color, will be overridden by specific fills */
 }
 
-.weight-fill    { 
-  background-color: #e67e22; 
+/* Action Buttons */
+.button-container {
+  margin-top: 20px;
 }
-.happiness-fill { 
-  background-color: #2ecc71; 
+  
+.button-container button {
+  width: 100px;
+  margin-right: 10px;
+  font-size: 15px;
+
+  text-align: center;
+  display: inline-block;
+  float: left;
+  cursor: pointer;
+  border-radius: 5px;
+  
+  background-color: #1e2835;
+  border-color: #404853;
+  background-image: linear-gradient(to bottom,rgba(246,246,246,.1)0%,rgba(30,40,53,0)66%);
+  color: #fafafa;
 }
-.style-fill     { 
-  background-color: #9b59b6; 
+
+.disabled-btn { 
+  opacity: 0.4; 
+  cursor: not-allowed;
+  filter: grayscale(100%); 
 }
