@@ -18,6 +18,9 @@ var pet_info = {
     style: 5
 }
 
+var notificationActive = false;
+var currentNotificationPriority = 0;
+
 // Track Stat Limits 
 var shownLimitMessages = { 
   weightMin: false, 
@@ -33,7 +36,7 @@ function clickedTreatButton() {
   pet_info.happiness += 3; // Increase pet happiness
   pet_info.weight += 1; // Increase pet weight
   
-  showNotification("Yummy! Gimme some more?"); 
+  showNotification("Yummy! Gimme some more?", "Treat", 1); 
   checkAndUpdatePetInfoInHtml();
 }
 
@@ -43,7 +46,7 @@ function clickedPlayButton() {
   pet_info.weight -= 1; // Decrease pet weight
   pet_info.style -= 1; // Decrease pet style
 
-  showNotification("That was so fun! Let's play again some time!"); 
+  showNotification("That was so fun! Let's play again some time!", "Play", 1); 
   checkAndUpdatePetInfoInHtml();
 }
 
@@ -53,7 +56,7 @@ function clickedExerciseButton() {
   pet_info.weight -= 1; // Decrease pet weight
   pet_info.style -= 1; // Decrease pet style
 
-  showNotification("Are we finally done...? No more please..."); 
+  showNotification("Are we finally done...? No more please...", "Exercise", 1); 
   checkAndUpdatePetInfoInHtml();
 }
 
@@ -62,7 +65,7 @@ function clickedDripButton() {
   pet_info.style += 2; // Increase pet style
   pet_info.happiness += 1; // Increase pet happiness
 
-  showNotification("Aren't I handsome?!"); 
+  showNotification("Aren't I handsome?!", "Drip", 1); 
   checkAndUpdatePetInfoInHtml();
 }
 
@@ -72,6 +75,10 @@ function checkAndUpdatePetInfoInHtml() {
   checkLimitMessages();
   updateButtonStates();
   updatePetInfoInHtml();
+
+  if (!notificationActive) {
+    updatePermanentSprite();
+  }
 }
 
 // Check Pet Info before updating HTML
@@ -92,14 +99,14 @@ function checkLimitMessages() {
 
   // Weight Limits
   if (pet_info.weight === 0) { 
-    showNotification("I'm starving over here! Feeeeeeed me!");
+    showNotification("I'm starving over here! Feeeeeeed me!", null, 2);
     shownLimitMessages.weightMin = true;
   } else {
     shownLimitMessages.weightMin = false;
   }
 
   if (pet_info.weight === 10) {
-    showNotification("Is it just me or do I look rounder than usual?");
+    showNotification("Is it just me or do I look rounder than usual?", null, 2);
     shownLimitMessages.weightMax = true;
   } else { 
     shownLimitMessages.weightMax = false;
@@ -107,23 +114,23 @@ function checkLimitMessages() {
 
   // Happiness Limits
   if (pet_info.happiness === 0) {
-    showNotification("I'm so bored. You always make me exercise... Can't we do something fun?");
+    showNotification("I'm so bored. You always make me exercise... Can't we do something fun?", null, 2);
     shownLimitMessages.happinessMin = true;
   } else {
     shownLimitMessages.happinessMin = false;
   }
   
   // Style Limits
+  // Prevent spam and prioritize weight and happiness special messages
   if (pet_info.style === 0 && pet_info.weight > 0 && pet_info.weight < 10 && pet_info.happiness > 0) { 
-    // Prevent spam and prioritize weight and happiness special messages
-    showNotification("I'm so battered, not even my mom would recognize my cute face!?!");
+    showNotification("I'm so battered, not even my mom would recognize my cute face!?!", null, 2);
     shownLimitMessages.styleMin = true;
   } else {
     shownLimitMessages.styleMin = false;
   }
 
   if (pet_info.style === 10 && pet_info.weight > 0 && pet_info.weight < 10 && pet_info.happiness > 0) {
-    showNotification("It is I the drip Master! No other has more drip than me!");
+    showNotification("It is I the drip Master! No other has more drip than me!", null, 2);
     shownLimitMessages.styleMax = true;
   } else {
     shownLimitMessages.styleMax = false;
@@ -159,13 +166,13 @@ function updateButtonStates() {
 // Color based on stat bar values 
 function colorCheck(colorA, colorB, ratio) {
   // Split the hex color into RGB components and convert to decimal
-  var rA = parseInt(colorA.slice(1, 3), 16); // 'e7'
-  var gA = parseInt(colorA.slice(3, 5), 16); // '4c'
-  var bA = parseInt(colorA.slice(5, 7), 16); // '3c'
+  var rA = parseInt(colorA.slice(1, 3), 16); 
+  var gA = parseInt(colorA.slice(3, 5), 16); 
+  var bA = parseInt(colorA.slice(5, 7), 16); 
 
-  var rB = parseInt(colorB.slice(1, 3), 16); // '2e'
-  var gB = parseInt(colorB.slice(3, 5), 16); // 'ec'
-  var bB = parseInt(colorB.slice(5, 7), 16); // '71'
+  var rB = parseInt(colorB.slice(1, 3), 16); 
+  var gB = parseInt(colorB.slice(3, 5), 16); 
+  var bB = parseInt(colorB.slice(5, 7), 16); 
 
   // Linear interpolation (intermediate color) based on ratio between colorA and colorB
   var r = Math.round(rA + (rB - rA) * ratio); 
@@ -183,7 +190,27 @@ function statColor(value, lowColor, midColor, highColor) {
     return colorCheck(midColor, highColor, (value - 5) / 5);
   }
 }
-    
+
+// Change Sprite 
+function setSprite(sprite) { 
+  $('.pet-image').attr('src', `assets/${sprite}.png`);
+}
+
+// Updating Permanent Sprites 
+function updatePermanentSprite() {
+  if (pet_info.weight === 0) { 
+    setSprite("Hungry");
+  } else if (pet_info.weight === 10) { 
+    setSprite("Full");
+  } else if (pet_info.style === 10) { 
+    setSprite("DripMaster");
+  } else if (pet_info.happiness === 0) { 
+    setSprite("Upset");
+  } else { 
+    setSprite("Default");
+  }
+}
+
 // Updates your HTML with the current values in your pet_info object
 function updatePetInfoInHtml() {
   var red   = '#8C001A';
@@ -210,17 +237,31 @@ function updatePetInfoInHtml() {
 }
 
 // Visual notifications 
-function showNotification(message) {
+function showNotification(message, reactiveSprite = null, priority = 0) {
+
+  // Block only if this is LOWER priority than the current one
+  if (priority < currentNotificationPriority) return;
+
+  currentNotificationPriority = priority;
+  notificationActive = true;
+
   var $note = $('.notification'); 
-  $note.finish(); 
+  $note.stop(true, true);
 
-  $('button').prop('disabled', true); // Disable buttons while notification is shown
+  $('button').prop('disabled', true); 
 
-  $note.text(message).show(); // Show the notification with the message
+  if (reactiveSprite) { 
+    setSprite(reactiveSprite);
+  }
 
-  $note 
-    .delay(4000) // Keep the notification visible for 2 seconds
-    .fadeOut(500);
-      
-    updateButtonStates(); // Update button states after notification is done
+  $note.text(message).show(); 
+
+  $note
+    .delay(4000)
+    .fadeOut(500, function() {
+      notificationActive = false;
+      currentNotificationPriority = 0;
+      updatePermanentSprite(); 
+      updateButtonStates();
+    });
 }

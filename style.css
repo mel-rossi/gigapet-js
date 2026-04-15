@@ -33,6 +33,15 @@ header, footer {
   padding: 10px;
 }
 
+a { 
+  color: inherit;
+
+  border: .1vw solid WhiteSmoke;
+  text-decoration: none;
+  padding: .3vw;
+  border-radius: .5vw;
+}
+
 .site-header { 
   margin-bottom: 10px;
 }
@@ -152,7 +161,7 @@ footer a {
   background-color: DarkGrey;
   border-radius: 2vw;
   overflow: hidden;
-  border: 1px solid DimGray;
+  border: .1vw solid DimGray;
 }
 
 .meter-value { 
@@ -189,8 +198,6 @@ footer a {
   font-size: 1.8vw;
 
   text-align: center;
-  display: inline-block;
-  float: left;
   cursor: pointer;
   border: dashed;
   border-radius: 2vw;
