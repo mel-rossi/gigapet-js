@@ -66,6 +66,7 @@ footer a {
 
 /* Main Content */ 
 .pet-menu { 
+  position: relative;
   display: grid;
   justify-content: center;
   grid-template-columns: 1fr 1fr;
@@ -81,17 +82,31 @@ footer a {
 /* Sprite */ 
 .pet-image-container {
   position: relative;
-  padding: 1vw;
   display: flex; 
   align-items: center; 
   justify-content: center;
+  overflow: visible;
 }
 
 .pet-image {
-  width: 20vw;
-  height: auto; 
-  max-width: 100%; 
-  border-radius: 10px;
+  position: absolute;
+  top: calc(20px + 3vw); /* Align up to bottom of name box */
+  left: 25%;
+  transform: translateX(-50%);
+  width: 25vw;
+  height: auto;
+  max-width: 100%;
+  border-radius: 50%;
+}
+
+
+.pet-image.shiny {
+  box-shadow:
+    0 0 1vw 0.4vw gold,
+    0 0 2vw 1vw rgba(255, 215, 0, 0.8),
+    0 0 3vw 1.5vw rgba(255, 255, 0, 0.6),
+    0 0 4vw 2vw rgba(255, 255, 0, 0.4);
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 /* Conditional Message */

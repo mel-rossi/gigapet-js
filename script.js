@@ -18,8 +18,10 @@ var pet_info = {
     style: 5
 }
 
+// Global variables
 var notificationActive = false;
 var currentNotificationPriority = 0;
+var lastAction = null; 
 
 // Track Stat Limits 
 var shownLimitMessages = { 
@@ -33,6 +35,8 @@ var shownLimitMessages = {
 
 // Treat button
 function clickedTreatButton() {
+  lastAction = "treat";
+
   pet_info.happiness += 3; // Increase pet happiness
   pet_info.weight += 1; // Increase pet weight
   
@@ -42,26 +46,32 @@ function clickedTreatButton() {
 
 // Play Button
 function clickedPlayButton() {
+  lastAction = "play"; 
+
   pet_info.happiness += 2; // Increase pet happiness
   pet_info.weight -= 1; // Decrease pet weight
   pet_info.style -= 1; // Decrease pet style
 
-  showNotification("That was so fun! Let's play again some time!", "Play", 1); 
+  showNotification("This was so fun! Let's play again some time!", "Play", 1); 
   checkAndUpdatePetInfoInHtml();
 }
 
 // Exercise Button 
 function clickedExerciseButton() {
+  lastAction = "exercise";
+
   pet_info.happiness -= 2; // Decrease pet happiness
   pet_info.weight -= 1; // Decrease pet weight
   pet_info.style -= 1; // Decrease pet style
 
-  showNotification("Are we finally done...? No more please...", "Exercise", 1); 
+  showNotification("Are we done yet...? No more please...", "Exercise", 1); 
   checkAndUpdatePetInfoInHtml();
 }
 
 // Drip Button
 function clickedDripButton() {
+  lastAction = "drip";
+
   pet_info.style += 2; // Increase pet style
   pet_info.happiness += 1; // Increase pet happiness
 
@@ -71,11 +81,13 @@ function clickedDripButton() {
 
 // Check & Update Pet Info in HTML
 function checkAndUpdatePetInfoInHtml() {
+  // Check and Update Stats and Limit Messages
   checkWeightAndHappinessBeforeUpdating();
   checkLimitMessages();
   updateButtonStates();
   updatePetInfoInHtml();
 
+  // Change "Permanent" Sprite
   if (!notificationActive) {
     updatePermanentSprite();
   }
@@ -88,15 +100,14 @@ function checkWeightAndHappinessBeforeUpdating() {
   if (pet_info.happiness < 0) pet_info.happiness = 0;
   if (pet_info.style < 0) pet_info.style = 0;
 
-  // Cap values 
+  // Cap values (fall back)
   if (pet_info.weight > 10) pet_info.weight = 10;
   if (pet_info.happiness > 10) pet_info.happiness = 10;
   if (pet_info.style > 10) pet_info.style = 10;
 }
 
-// Check for Stat Limits to ensure special messages 
+// Check for Stat Limits to ensue special messages 
 function checkLimitMessages() {
-
   // Weight Limits
   if (pet_info.weight === 0) { 
     showNotification("I'm starving over here! Feeeeeeed me!", null, 2);
@@ -129,7 +140,7 @@ function checkLimitMessages() {
     shownLimitMessages.styleMin = false;
   }
 
-  if (pet_info.style === 10 && pet_info.weight > 0 && pet_info.weight < 10 && pet_info.happiness > 0) {
+  if (lastAction === "drip" && pet_info.style === 10 && pet_info.weight > 0 && pet_info.weight < 10 && pet_info.happiness > 0) {
     showNotification("It is I the drip Master! No other has more drip than me!", null, 2);
     shownLimitMessages.styleMax = true;
   } else {
@@ -217,22 +228,31 @@ function updatePetInfoInHtml() {
   var green = '#317B22';
   var blue  = '#5C80BC';
 
+  // Shiny Border when at Max Happiness
+  if (pet_info.happiness === 10) {
+    $('.pet-image').addClass('shiny');
+  } else {
+    $('.pet-image').removeClass('shiny');
+  }
+
+  // Inject variables into text
   $('.name').text(pet_info['name']);
   $('.weight').text(pet_info['weight']);
   $('.happiness').text(pet_info['happiness']);
   $('.style').text(pet_info['style']);
 
+  // Meter fill widths
   $('.weight-fill').css('width', (pet_info.weight / 10 * 100) + '%');
   $('.happiness-fill').css('width', (pet_info.happiness / 10 * 100) + '%');
   $('.style-fill').css('width', (pet_info.style / 10 * 100) + '%');
 
-  // Weight Bar Fill : Red (0) - Green (5) - Red (10)
+  // Weight Bar Fill (Color) : Red (0) - Green (5) - Red (10)
   $('.weight-fill').css('background-color', statColor(pet_info.weight, red, green, red));
 
-  // Happiness Bar Fill : Red (0) - Blue (5) - Green (10)
+  // Happiness Bar Fill (Color) : Red (0) - Blue (5) - Green (10)
   $('.happiness-fill').css('background-color', statColor(pet_info.happiness, red, blue, green));
 
-  // Style Bar Fill : Red (0) - Blue (5) - Green (10)
+  // Style Bar Fill (Color) : Red (0) - Blue (5) - Green (10)
   $('.style-fill').css('background-color', statColor(pet_info.style, red, blue, green));
 }
 
@@ -250,6 +270,7 @@ function showNotification(message, reactiveSprite = null, priority = 0) {
 
   $('button').prop('disabled', true); 
 
+  // Temporary Sprite Change for Actions
   if (reactiveSprite) { 
     setSprite(reactiveSprite);
   }
