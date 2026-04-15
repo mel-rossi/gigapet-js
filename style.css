@@ -1,15 +1,3 @@
-/*
-  Color Scheme 
-  Site Background:  White Smoke
-  Pet Menu: Bisque
-  Footer & Header Background: #404853
-  Font: Black || White Smoke
-  Meter Fill Main Colors: (color fade and color assignment through script.js)
-    #e74c3c (Red)
-    #2ecc71 (Green)
-    #3498db (Blue)
-*/
-
 /* Global Styles */ 
 * {
   box-sizing: border-box;
@@ -21,10 +9,10 @@ html, body {
 }
 
 body {
-  font-family: helvetica, arial, sans-serif;
+  font-family: Verdana, Geneva, sans-serif;
 
-  color: black;
-  background-color: Whitesmoke;
+  color: Black;
+  background-color: WhiteSmoke; 
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -33,13 +21,13 @@ body {
 main {
   display: flex;
   justify-content: center;
-  padding: 20px;
+  align-items: center;
   flex: 1;
 }
   
 header, footer {
-  color: whitesmoke;
-  background-color: #404853;
+  color: WhiteSmoke;
+  background-color: Maroon;
 
   text-align: center;
   padding: 10px;
@@ -57,10 +45,6 @@ header, footer {
   font-weight: bold;
 }
   
-p {
-  max-width: 600px;
-}
-  
   
 li {
   margin-bottom: 5px;
@@ -73,11 +57,13 @@ footer a {
 
 /* Main Content */ 
 .pet-menu { 
-  display: inline-grid;
+  display: grid;
   justify-content: center;
-  align-self: flex-start;
-  grid-template-columns: auto auto;
-  padding: 10px;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 5vw;
+  width: 80vw; 
+  
 
   /* background-color: bisque; */
   border-radius: 20px;
@@ -86,12 +72,17 @@ footer a {
 /* Sprite */ 
 .pet-image-container {
   position: relative;
-  padding: 10px;
+  padding: 1vw;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
 }
 
 .pet-image {
-  overflow: hidden;
-  height: 250px;
+  width: 20vw;
+  height: auto; 
+  max-width: 100%; 
+  border-radius: 10px;
 }
 
 /* Conditional Message */
@@ -105,7 +96,7 @@ footer a {
   border: 2px solid #ccc;
   border-radius: 16px;
   padding: 8px 14px;
-  font-size: 13px;
+  font-size: 1vw;
   font-weight: bold;
   text-align: center;
   z-index: 10;
@@ -126,24 +117,29 @@ footer a {
 
 /* Name */
 .name-box { 
-  font-size: 40px;
+  font-size: 3vw;
   font-style: oblique;
-  text-shadow: 1px 2px 0px lightslategray;
+  color: Black;
+  text-shadow: 2px 2px 0px WhiteSmoke; 
 
-  margin: 10px;
+  border: 1px dotted Black;
+  border-width: .2vw .4vw;
+  border-radius: 1vw;
+  background-image: linear-gradient(to top, Wheat, Cornsilk);
 }
 
 /* Stats */
 .stat-box { 
   display: grid;
   grid-template-columns: auto auto;
-  padding: 5px;
+  padding: 10px;
+  width: 100%;
 }
 
 .stat-label { 
-  font-size: 15px; 
-  margin-bottom: 4px;
-  width: 150px;
+  font-size: 1.4vw; 
+  margin-bottom: 0.4vw;
+  width: 100%;
 
   white-space: nowrap;
   font-weight: bold;
@@ -151,12 +147,12 @@ footer a {
 
 .meter-bar { 
   position: relative;
-  width: 150px;
-  height: 20px;
-  background-color: #bbb;
-  border-radius: 10px;
+  width: 30vw;
+  height: 2vw;
+  background-color: DarkGrey;
+  border-radius: 2vw;
   overflow: hidden;
-  border: 1px solid #777;
+  border: 1px solid DimGray;
 }
 
 .meter-value { 
@@ -164,14 +160,14 @@ footer a {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 12px;
+  font-size: 1vw;
   font-weight: bold;
 }
 
 .meter-fill { 
   height: 100%;
   width: 0%;
-  border-radius: 10px;
+  border-radius: 2vw;
   transition: width 0.5s ease-in-out;
 
   background-color: blue; /* Default color, will be overridden by specific fills */
@@ -179,24 +175,30 @@ footer a {
 
 /* Action Buttons */
 .button-container {
-  margin-top: 20px;
+  margin-top: 3vw;
+
+  display: flex;
+  justify-content: center; 
+  gap: 1vw;
 }
   
 .button-container button {
-  width: 100px;
-  margin-right: 10px;
-  font-size: 15px;
+  width: 8vw;
+  height: 4vw;
+  margin-right: 1vw;
+  font-size: 1.8vw;
 
   text-align: center;
   display: inline-block;
   float: left;
   cursor: pointer;
-  border-radius: 5px;
+  border: dashed;
+  border-radius: 2vw;
+  border-width: .1vw .4vw;
   
-  background-color: #1e2835;
-  border-color: #404853;
-  background-image: linear-gradient(to bottom,rgba(40,48,53,.1)0%,rgba(30,40,53,0)66%);
-  color: #fafafa;
+  color: WhiteSmoke;
+  background-image: linear-gradient(to bottom, Burlywood, RosyBrown);
+  border-color: Black;
 }
 
 .disabled-btn { 

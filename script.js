@@ -186,9 +186,9 @@ function statColor(value, lowColor, midColor, highColor) {
     
 // Updates your HTML with the current values in your pet_info object
 function updatePetInfoInHtml() {
-  var red   = '#e74c3c';
-  var green = '#2ecc71';
-  var blue  = '#3498db';
+  var red   = '#8C001A';
+  var green = '#317B22';
+  var blue  = '#5C80BC';
 
   $('.name').text(pet_info['name']);
   $('.weight').text(pet_info['weight']);
